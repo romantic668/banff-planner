@@ -1,0 +1,16 @@
+app = "banff-planner"
+primary_region = "sea"
+
+[http_service]
+  internal_port = 8000
+  processes = ["app"]
+
+[[vm]]
+  memory = "256mb"   # 建议降到免费档
+  cpu_kind = "shared"
+  cpus = 1
+
+[[mounts]]
+  source = "banff_data"
+  destination = "/data"
+  processes = ["app"]
