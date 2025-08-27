@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<a class="back" href="javascript:history.back()">&larr; Back</a>
+<div class="detail">
+    <img class="hero" src="{{ route.image_url or 'https://picsum.photos/seed/' ~ route.id ~ '/1200/500' }}"
+        alt="{{ route.name }}">
+    <h2>{{ route.name }}</h2>
+    <div class="badges">
+        <span class="badge">{{ route.difficulty }}</span>
+        <span class="badge">{{ "%.1f"|format(route.distance_km) }} km</span>
+        <span class="badge">{{ "%.1f"|format(route.duration_hours) }} h</span>
+    </div>
+    <p>{{ route.description or '' }}</p>
+    <small>Lat {{ "%.4f"|format(route.lat) }}, Lon {{ "%.4f"|format(route.lon) }}</small>
+
+    <h3 style="margin-top:1rem">3-day forecast</h3>
+    <div id="forecast">Loading…</div>
+    <div style="margin-top:.5rem">
+        <button onclick="switchUnits('metric')">°C</button>
+        <button onclick="switchUnits('imperial')">°F</button>
+    </div>
+</div>
+
+<script>
+    let units = new URLSearchParams(location.search).get('units') || '{{ units }}';
+    const box = document.getElementById('forecast');
+
+    async function load() {
+        box.textContent = 'Loading…';
+        try {
+            const url = `/api/forecast?lat={{ route.lat }}&lon={{ route.lon }}&units=${units}`;
+            const r = await fetch(url);
+            const j = await r.json();
+            if (j.daily && j.daily.length) {
+                box.innerHTML = j.daily.map(d => `
+        <div class="row">
+          <div><b>${d.date}</b><br><span class="muted">${d.desc}</span></div>
+          <div><b>${Math.round(d.min)} ~ ${Math.round(d.max)}</b> ${units === 'metric' ? '°C' : '°F'}</div>
+        </div>
+      `).join('');
+            } else {
+                box.innerHTML = `<div class="muted">No data or offline</div>`;
+            }
+        } catch {
+            box.innerHTML = `<div class="muted">Weather unavailable</div>`;
+        }
+    }
+    function switchUnits(u) { units = u; const q = new URLSearchParams(location.search); q.set('units', u); history.replaceState(null, '', `?${q}`); load(); }
+    load();
+</script>
+{% endblock %}

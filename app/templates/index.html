@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Top Banff Hikes</h1>
+<div class="grid">
+    {% for r in routes %}
+    <a class="card" href="/route/{{ r.id }}">
+        <img src="{{ r.image_url or 'https://picsum.photos/seed/' ~ r.id ~ '/800/400' }}" alt="{{ r.name }}">
+        <div class="card-body">
+            <h3>{{ r.name }}</h3>
+            <div class="badges">
+                <span class="badge">{{ r.difficulty }}</span>
+                <span class="badge">{{ "%.1f"|format(r.distance_km) }} km</span>
+                <span class="badge">{{ "%.1f"|format(r.duration_hours) }} h</span>
+            </div>
+            <p>{{ r.description or '' }}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

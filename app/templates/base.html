@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Banff Hiking Planner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="/static/manifest.webmanifest">
+    <meta name="theme-color" content="#0d6efd">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <nav class="nav">
+        <a class="brand" href="/">Banff Hiking Planner</a>
+    </nav>
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('/static/sw.js').catch(console.error));
+        }
+    </script>
+</body>
+
+</html>
