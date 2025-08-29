@@ -3,10 +3,14 @@ primary_region = "sea"
 
 [http_service]
   internal_port = 8000
+  force_https = true
+  auto_stop_machines = true     # 🟢 闲置时自动停机
+  auto_start_machines = true    # 🟢 有流量时自动启动
+  min_machines_running = 0      # 🟢 允许跑 0 台机子（最省钱）
   processes = ["app"]
 
 [[vm]]
-  memory = "256mb"   # 建议降到免费档
+  memory = "256mb"              # 🟢 最低配 (免费额度更划算)
   cpu_kind = "shared"
   cpus = 1
 
